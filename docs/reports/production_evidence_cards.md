@@ -128,8 +128,8 @@
 | OIDC肯定・否定系 | PASS |
 | RTDNテスト通知 | PASS |
 | 実subscriptionNotification受信 | PASS |
-| RTDN後のDB状態遷移 | 未確認 |
-| アプリ表示の状態遷移 | 未確認 |
+| RTDN後のDB状態遷移 | PASS |
+| アプリ表示の状態遷移 | PASS（条件付き） |
 | grace_periodコード | PASS |
 | grace_period実状態 | 未確認 |
 | account hold | 未確認 |
@@ -156,6 +156,7 @@
 - recordError失敗時の非2xx維持：コード確認PASS、故障注入テスト未実施
 - 部分UNIQUE INDEXのProduction適用確認は、このセッション以前の作業でpg_indexesクエリにより実施済み（本セッションでは未実施）
 - 2026-07-24実測：acknowledgementState実測・再起動後のPlus維持・再ログイン後のPlus維持の3件をPASSへ変更。新規テスト購入（未acknowledge状態からの購入）により、[billing/verify] acknowledge成功をVercelログで確認。再起動・再ログインとも実機（Pixel 9a）でPlus表示の維持を確認
+- 2026-07-24追加実測：RTDN後のDB状態遷移をPASSへ変更。テスト購読の自然失効（購入から約35分後）により、user_entitlements.statusがactive→expiredへ正しく遷移したことをSupabase SQL Editorで確認（updated_at: 2026-07-24 11:54:21 UTC）。アプリ表示の状態遷移もPASS（条件付き）へ変更。新規ログイン時にexpired状態が正しく「無料プラン」表示へ反映されることを確認したが、タブを開いたまま自動更新される経路（visibilitychange実装の効果）は、テスト環境でアプリを誤って閉じてしまったため未検証のまま残る
 
 ---
 
