@@ -110,7 +110,7 @@
 
 ## カード1: Google Play課金・権利付与・RTDNライフサイクル同期
 
-最終更新: 2026-07-21
+最終更新: 2026-07-24
 関連commit: f071b0b (purchase_token部分UNIQUE INDEX migration作成), 70efc29 (23505ハンドリング・403統一), 63ec5f8 (versionCode 4 git反映漏れ), 0fbaf00 (デバッグログ削除)
 
 | 項目 | 状態 |
@@ -122,7 +122,7 @@
 | 購入直後のPlus表示 | PASS |
 | 修正後の新規購入回帰 | PASS |
 | acknowledgeコード経路 | PASS |
-| acknowledgementState実測 | 未確認 |
+| acknowledgementState実測 | PASS |
 | RTDN設定 | PASS |
 | Pub/Sub輸送経路 | PASS |
 | OIDC肯定・否定系 | PASS |
@@ -143,8 +143,8 @@
 | 23505エラーハンドリング（アプリ側、commit 70efc29） | PASS |
 | Production重複拒否の実動作確認 | 未確認 |
 | Production既存所有者entitlement維持実測 | 未確認 |
-| 再起動後のPlus維持 | 未確認 |
-| 再ログイン後のPlus維持 | 未確認 |
+| 再起動後のPlus維持 | PASS |
+| 再ログイン後のPlus維持 | PASS |
 | 自動テスト | PASS（91件全通過） |
 | 一般公開 | FAIL |
 
@@ -155,6 +155,7 @@
 - billing_webhook_errorsのRLS：service roleでSELECT/INSERT/DELETE可能、anonからのSELECT/INSERT拒否は実測PASS、authenticatedからの拒否はRLS有効・ポリシー0件という構造確認PASS（直接実測は未実施）
 - recordError失敗時の非2xx維持：コード確認PASS、故障注入テスト未実施
 - 部分UNIQUE INDEXのProduction適用確認は、このセッション以前の作業でpg_indexesクエリにより実施済み（本セッションでは未実施）
+- 2026-07-24実測：acknowledgementState実測・再起動後のPlus維持・再ログイン後のPlus維持の3件をPASSへ変更。新規テスト購入（未acknowledge状態からの購入）により、[billing/verify] acknowledge成功をVercelログで確認。再起動・再ログインとも実機（Pixel 9a）でPlus表示の維持を確認
 
 ---
 
