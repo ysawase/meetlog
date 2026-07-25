@@ -131,7 +131,7 @@
 | RTDN後のDB状態遷移 | PASS |
 | アプリ表示の状態遷移 | PASS（条件付き） |
 | grace_periodコード | PASS |
-| grace_period実状態 | 未確認 |
+| grace_period実状態 | PASS |
 | account hold | PASS |
 | recovery | 未確認 |
 | 0行silent failure修正 | PASS |
@@ -158,6 +158,7 @@
 - 2026-07-24実測：acknowledgementState実測・再起動後のPlus維持・再ログイン後のPlus維持の3件をPASSへ変更。新規テスト購入（未acknowledge状態からの購入）により、[billing/verify] acknowledge成功をVercelログで確認。再起動・再ログインとも実機（Pixel 9a）でPlus表示の維持を確認
 - 2026-07-24追加実測：RTDN後のDB状態遷移をPASSへ変更。テスト購読の自然失効（購入から約35分後）により、user_entitlements.statusがactive→expiredへ正しく遷移したことをSupabase SQL Editorで確認（updated_at: 2026-07-24 11:54:21 UTC）。アプリ表示の状態遷移もPASS（条件付き）へ変更。新規ログイン時にexpired状態が正しく「無料プラン」表示へ反映されることを確認したが、タブを開いたまま自動更新される経路（visibilitychange実装の効果）は、テスト環境でアプリを誤って閉じてしまったため未検証のまま残る
 - 2026-07-25実測：account holdをPASSへ変更。実測方法：Google Playアプリでメイン支払い方法を「テストカード、常に不承認」に変更。約5分後、Vercelログで/api/billing/webhookにnotificationType=5（SUBSCRIPTION_ON_HOLD）を13:19:12に受信したことを確認。同時刻、SaidLogアプリ側の表示もPlusから無料プランへ切り替わり、サーバー・クライアントの反映タイミングが一致することを確認した（webhookログとアプリ実機観測の突き合わせ）。備考：その後13:29台にnotificationType=3(CANCELED)・13(EXPIRED)を受信し、user_entitlements.statusもexpiredへ遷移済みを確認（Production DB照会、user_id=7f4328fe-c0fc-4b34-b25b-f18522e5f3bb）。grace_period実状態は、決済拒否〜account hold通知までの間のログ（Vercel無料枠のLast hour制限）を確認できなかったため、引き続き未確認のまま維持
+- 2026-07-25追加実測：grace_period実状態をPASSへ変更。実測方法：新規テストサブスク購入後、15:58に支払い方法を「テストカード、常に不承認」に変更。16:02:24にVercelログでnotificationType=6（SUBSCRIPTION_IN_GRACE_PERIOD）を受信し、その後16:06時点でSaidLogアプリのPlus表示が維持されていることを確認（猶予期間中のアクセス保持が正しく機能）。16:07:20にnotificationType=5（SUBSCRIPTION_ON_HOLD）を受信、account holdへ移行。アプリ再起動後、正しく無料プラン表示へ切り替わったことを確認した。備考：account hold移行時、アプリを開いたままにした場合の即時反映（visibilitychange経由の自動更新）については、確認手順の不備（事前にタブを閉じない旨を明示しなかった）により今回も確度の高い観測が得られなかった。この項目（タブを開いたままでの自動更新の厳密な実地確認）は引き続き未検証のまま残す。
 
 ---
 
