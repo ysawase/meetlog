@@ -2,7 +2,7 @@
 
 リアル会議向けの、話者識別付き音声文字起こしWebアプリ。
 
-音声ファイル（mp3 / mp4 / wav / m4a）をアップロードすると、AssemblyAI で文字起こし＋話者識別を行い、「話者名：発言内容」の形式で表示します。フィラー語（あー、えーと など）は自動除去されます。
+音声ファイル（mp3 / mp4 / wav / m4a）をアップロードすると、Groq Whisper API（環境変数により AssemblyAI へ切替可）で文字起こし＋話者識別を行い、「話者名：発言内容」の形式で表示します。フィラー語（あー、えーと など）は自動除去されます。
 
 ## 技術スタック
 
@@ -10,9 +10,10 @@
 |---|---|
 | フロントエンド | React (Vite) |
 | バックエンド | Node.js + Express |
-| 文字起こし・話者識別 | AssemblyAI API |
+| 文字起こし・話者識別 | Groq Whisper API / AssemblyAI API（環境変数STT_PROVIDERで切替可能な抽象化レイヤー、server/stt/経由） |
 | データベース | Supabase |
 | デプロイ | Vercel |
+| モバイル | Capacitor（Android） |
 
 ## ディレクトリ構成
 
